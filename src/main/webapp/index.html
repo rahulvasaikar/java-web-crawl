@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+	<title>Eulerity Challenge</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
+	  
+	  <!-- ==================================================
+							welcome-area
+      ================================================== -->
+	  <section class="blog-intro" data-scroll-index="1">
+		 <div class="overlay-bg-75 sec-padding flex-center" style="background-image: url(https://tmvc.sg/wp-content/uploads/2018/06/Challenge-Accepted-End-Frame.png); background-position: right; background-size: cover;">
+		  </div>
+	  </section>
+	  <!-- ==================================================
+							End welcome-area
+      ================================================== -->
+	  
+	  <!-- ==================================================
+							Main-area
+      ================================================== -->
+			<br><h1 class="title-h p-relative fw-800 mb-10px">
+				<span class="fw-300"></span> Eulerity Take-Home Challenge
+				<span class="circle-1 p-absolute bg-red radius-50"></span>
+				<span class="circle-2 p-absolute bg-red radius-50"></span>
+			</h1>
+			<p class="title-p p-relative fs-15 color-666">
+				<span class="line-1 p-absolute bg-red"></span>
+				<span class="line-2 p-absolute bg-red"></span>
+			</p>
+				<div class = "container"> 
+					<div class = "input"><br>
+						<form class="col-md-8 offset-md-4">
+							<input type = "text" name = "url" id = "urlInput" style="border:solid;">&nbsp;&nbsp;&nbsp;
+							<button type="button" id= "submit" style="border:solid;">Submit!</button>
+						</form>
+					</div>
+				<h3>LOGO</h3>
+				<div class = "output">
+					<ul id = "results-list">
+				
+					</ul>
+				</div>
+			</div>
+			
+	  <!-- ==================================================
+													Script
+      ================================================== -->
+		<script>		
+				var submitButton = document.getElementById("submit");
+				
+				apiCallBack = function(xhr, callback) {
+					if(xhr.readyState == XMLHttpRequest.DONE){
+						if(xhr.status != 200){
+							let message = xhr.status + ":" + xhr.statusText + ":" + xhr.responseText;
+							alert(message);
+							throw 'API call returned bad code: ' + xhr.status;
+						}
+						let response = xhr.responseText ? JSON.parse(xhr.responseText) : null;
+						if(callback){
+							callback(response);
+						}
+					}
+				}
+				
+				updateList = function(response){
+					var items = document.getElementById("results-list");
+					items.innerHTML = "";
+					if(items){
+						for(var i = 0; i < response.length; i++){
+							var item = document.createElement("li");
+							item.innerHTML = "<img width = \"200\" src=\""+response[i]+"\">";
+							items.appendChild(item);
+						}
+					}
+				}
+				
+				makeApiCall = function(url, method, obj, callback){
+					let xhr = new XMLHttpRequest();
+					xhr.open(method, url);
+					xhr.onreadystatechange = apiCallBack.bind(null, xhr, callback);
+					xhr.send(obj ? obj instanceof FormData || obj.constructor == String ? obj : JSON.stringify(obj) : null);
+				}
+				
+				submitButton.addEventListener("click", function(event){
+					event.preventDefault();
+					var urlValue = document.getElementById("urlInput").value;
+					makeApiCall('main?url=' + urlValue, 'POST', null, updateList);
+				});
+				</script>
+		<!-- ==================================================
+													Script - End
+		================================================== -->
+	  <!-- ==================================================
+							End Main-area
+      ================================================== -->
+	  
+	  <!-- ==================================================
+							footer-area
+      ================================================== -->
+      <div class="footer-area text-center footer-padding">
+          <div class="container">
+			  <div class="row">
+				  <div class="col-md-12">
+					<p class="mt-5px mb-0px color-333 fw-500">Developed by 
+						  <strong class="color-red fw-600"> Rahul Vasaikar</strong>
+					</p>
+				</div>
+			  </div>
+		  </div>
+      </div>
+	  <!-- ==================================================
+							End footer-area
+      ================================================== -->
+  
+  </body>
+</html>
